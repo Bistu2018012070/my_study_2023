@@ -1,0 +1,51 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/springcloud_study?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #Spring Boot 默认是不注入这些属性值的,需要自己绑定
+    #druid 数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    #配置监控统计拦截的filters
+    # stat:监控统计
+    # log4j:日志记录(需要导入log4j依赖)
+    # wall:防御sql注入
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  #关闭模板引擎的缓存
+  thymeleaf:
+    cache: false
+  #国际化我们的配置文件的真实位置
+  messages:
+    basename: i18n.login
+
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+#登录页面的访问（首页）  在MyMvcConfig配置文件里面配置
+server:
+  servlet:
+    context-path: /
+
+#整合Mybatis
+mybatis:
+  check-config-location: false
+  mapper-locations: classpath:mybatis/mapper/*.xml

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard Template for Bootstrap</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/dashboard.css}" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+
+<body>
+<!--		<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">  清理掉这一整段代码-->
+<div th:replace="~{commons/commons::topbar}"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--				侧边栏-->
+        <!--				<nav class="col-md-2 d-none d-md-block bg-light sidebar">   清理这一整段代码-->
+        <!--		th:insert="~{dashboard::sidebar}" 通过insert实现插入数据（主键），获取dashboard页面抽取出来的主键，sidebar主键名		-->
+        <div th:replace="~{commons/commons::sidebar(active='list.html')}"></div>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <!--					通过post提交表单  控制层使用post方式接收	-->
+            <form th:action="@{/updateEmp}" method="post">
+                <!--						隐藏id的值为了防止每次修改都会更改id值，自增-->
+                <input type="hidden" name="id" th:value="${emp.getId()}">
+                <div class="form-group">
+                    <label>lastName</label>
+                    <input th:value="${emp.getLastName()}" class="form-control" name="lastName" type="text"
+                           placeholder="请输入姓名">
+                </div>
+                <div class="form-group">
+                    <label>email</label>
+                    <input th:value="${emp.getEmail()}" class="form-control" name="email" type="text"
+                           placeholder="请输入邮箱">
+                </div>
+                <div class="form-group">
+                    <label>gender</label><br>
+                    <div class="form-check form-check-inline">
+                        <!--									当${emp.getGender()==1}这个判断成立才选择这个选项-->
+                        <input th:checked="${emp.getGender()==1}" type="radio" name="gender" class="form-check-input"
+                               value="1">
+                        <label class="form-check-label">男</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input th:checked="${emp.getGender()==0}" type="radio" name="gender" class="form-check-input"
+                               value="0">
+                        <label class="form-check-label">女</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>department</label>
+                    <!--						department.id 注意点要加上对应的id		-->
+                    <select name="department.id" class="form-control">
+                        <!--								 th:each="dept:${departments}"遍历控制层传过来的数据取名为dept，th:text="${dept}"显示dept		th:value="${dept.getId()}"取到部门id值,提交一个属性-->
+                        <option th:selected="${dept.getId()==emp.getDepartment().getId()}" th:each="dept:${departments}"
+                                th:text="${dept.getDepartmentName()}" th:value="${dept.getId()}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>birth</label>
+                    <!--							通过配置文件配置时间日期格式-->
+                    <input th:value="${#dates.format(emp.getBirth(),'yyyy-MM-dd HH:mm:ss')}" type="text" name="birth"
+                           class="form-control" placeholder="请输入日期">
+                </div>
+                <button type="submit" class="btn btn-primary">修改</button>
+            </form>
+
+
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" th:src="@{/js/jquery-3.2.1.slim.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/popper.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+
+<!-- Icons -->
+<script type="text/javascript" th:src="@{/js/feather.min.js}"></script>
+<script>
+    feather.replace()
+</script>
+
+<!-- Graphs -->
+<script type="text/javascript" th:src="@{/js/Chart.min.js}"></script>
+<script>
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            datasets: [{
+                data: [15339, 21345, 18483, 24003, 23489, 24092, 12034],
+                lineTension: 0,
+                backgroundColor: 'transparent',
+                borderColor: '#007bff',
+                borderWidth: 4,
+                pointBackgroundColor: '#007bff'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: false
+                    }
+                }]
+            },
+            legend: {
+                display: false,
+            }
+        }
+    });
+</script>
+
+</body>
+
+</html>
